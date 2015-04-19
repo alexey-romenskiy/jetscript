@@ -19,37 +19,25 @@
 
 package codes.writeonce.fastfilter;
 
-import java.io.Serializable;
+import java.util.regex.Pattern;
 
-public class TextPosition implements Serializable {
+class ReplaceFirstTemplateResult extends RegexTemplateResult {
 
-    private static final long serialVersionUID = -2248424770269380295L;
-
-    public final int row;
-    public final int column;
-
-    public static TextPosition newPosition(CharSequence text, int position) {
-        int row = 1;
-        int column = 1;
-        for (int i = 0; i < position; i++) {
-            if (text.charAt(i) == '\n') {
-                row++;
-                column = 1;
-            } else {
-                column++;
-            }
-        }
-
-        return new TextPosition(row, column);
-    }
-
-    public TextPosition(int row, int column) {
-        this.row = row;
-        this.column = column;
+    public ReplaceFirstTemplateResult(TextPosition position, TemplateResult source, Pattern pattern,
+            TemplateResult replacement) {
+        super(position, source, pattern, replacement);
     }
 
     @Override
-    public String toString() {
-        return "(" + row + ", " + column + ")";
+    protected CharSequence getUnsafe() throws TemplateEvaluationException {
+        final CharSequence value = source.getCharSequence();
+        matcher.reset(value);
+        if (!matcher.find()) {
+            return value;
+        }
+        stringBuffer.setLength(0);
+        matcher.appendReplacement(stringBuffer, replacement.getStringValue());
+        matcher.appendTail(stringBuffer);
+        return stringBuffer;
     }
 }

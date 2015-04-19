@@ -23,19 +23,36 @@ public class TemplateEvaluationException extends Exception {
 
     private static final long serialVersionUID = -3479231829231425599L;
 
-    private final TextPosition position;
+    private final TextPosition textPosition;
+    private final String errorMessage;
 
-    public TemplateEvaluationException(TextPosition position, Throwable cause) {
-        super(cause);
-        this.position = position;
+    public TemplateEvaluationException(TextPosition textPosition, String errorMessage) {
+        super(makeMessage(textPosition, errorMessage));
+        this.textPosition = textPosition;
+        this.errorMessage = errorMessage;
     }
 
-    public TemplateEvaluationException(TextPosition position, String message) {
-        super(message);
-        this.position = position;
+    public TemplateEvaluationException(TextPosition textPosition, Throwable cause) {
+        super(makeMessage(textPosition, cause.getMessage()), cause);
+        this.textPosition = textPosition;
+        this.errorMessage = cause.getMessage();
     }
 
-    public TextPosition getPosition() {
-        return position;
+    public TemplateEvaluationException(TextPosition textPosition, String errorMessage, Throwable cause) {
+        super(makeMessage(textPosition, errorMessage), cause);
+        this.textPosition = textPosition;
+        this.errorMessage = errorMessage;
+    }
+
+    public TextPosition getTextPosition() {
+        return textPosition;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    private static String makeMessage(TextPosition textPosition, String errorMessage) {
+        return "Error at " + textPosition + ": " + errorMessage;
     }
 }

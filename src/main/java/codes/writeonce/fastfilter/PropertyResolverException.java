@@ -19,37 +19,24 @@
 
 package codes.writeonce.fastfilter;
 
-import java.io.Serializable;
+public class PropertyResolverException extends Exception {
 
-public class TextPosition implements Serializable {
+    private static final long serialVersionUID = -2251505147519239382L;
 
-    private static final long serialVersionUID = -2248424770269380295L;
-
-    public final int row;
-    public final int column;
-
-    public static TextPosition newPosition(CharSequence text, int position) {
-        int row = 1;
-        int column = 1;
-        for (int i = 0; i < position; i++) {
-            if (text.charAt(i) == '\n') {
-                row++;
-                column = 1;
-            } else {
-                column++;
-            }
-        }
-
-        return new TextPosition(row, column);
+    public PropertyResolverException(String message) {
+        super(message);
     }
 
-    public TextPosition(int row, int column) {
-        this.row = row;
-        this.column = column;
+    public PropertyResolverException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    @Override
-    public String toString() {
-        return "(" + row + ", " + column + ")";
+    public PropertyResolverException(Throwable cause) {
+        super(cause);
+    }
+
+    public PropertyResolverException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

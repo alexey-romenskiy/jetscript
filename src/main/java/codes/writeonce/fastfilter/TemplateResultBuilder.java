@@ -19,6 +19,40 @@
 
 package codes.writeonce.fastfilter;
 
-public interface TemplateResultBuilder {
-    // TODO:
+import java.util.regex.Pattern;
+
+interface TemplateResultBuilder {
+
+    TemplateResultBuilder concat(TemplateResultBuilder templateResultBuilder) throws TemplateEvaluationException;
+
+    TemplateResultBuilder condition(Condition condition, TemplateResultBuilder templateResultBuilder)
+            throws TemplateEvaluationException;
+
+    TemplateResultBuilder conversion(TextPosition position, StringConverter converter)
+            throws TemplateEvaluationException;
+
+    TemplateResultBuilder replaceAll(TextPosition position, Pattern pattern, TemplateResult replacement)
+            throws TemplateEvaluationException;
+
+    TemplateResultBuilder replaceFirst(TextPosition position, Pattern pattern, TemplateResult replacement)
+            throws TemplateEvaluationException;
+
+    TemplateResult build() throws TemplateEvaluationException;
+
+    <V, E extends Throwable> V accept(Visitor<V, E> visitor) throws E;
+
+    interface Visitor<V, E extends Throwable> {
+
+        V visit(InitTemplateResultBuilder initTemplateResultBuilder) throws E;
+
+        V visit(UndefinedTemplateResultBuilder undefinedTemplateResultBuilder) throws E;
+
+        V visit(EmptyTemplateResultBuilder emptyTemplateResultBuilder) throws E;
+
+        V visit(LiteralTemplateResultBuilder literalTemplateResultBuilder) throws E;
+
+        V visit(MultiTemplateResultBuilder multiTemplateResultBuilder) throws E;
+
+        V visit(SingleValueTemplateResultBuilder singleValueTemplateResultBuilder) throws E;
+    }
 }

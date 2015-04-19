@@ -21,14 +21,53 @@ package codes.writeonce.fastfilter;
 
 import java.io.IOException;
 
-public interface TemplateResult {
+interface TemplateResult {
 
-    void append(Appendable appendable) throws TemplateEvaluationException, IOException;
+    boolean isConstant();
 
-    void append(StringBuilder stringBuilder) throws TemplateEvaluationException;
+    /**
+     * @throws TemplateEvaluationException if value not defined
+     */
+    boolean append(Appendable appendable) throws IOException, TemplateEvaluationException;
 
+    ValueType appendIfDefined(Appendable appendable) throws IOException, TemplateEvaluationException;
+
+    /**
+     * @throws TemplateEvaluationException if value not defined
+     */
+    boolean append(StringBuilder stringBuilder) throws TemplateEvaluationException;
+
+    ValueType appendIfDefined(StringBuilder stringBuilder) throws TemplateEvaluationException;
+
+    /**
+     * @throws TemplateEvaluationException if value not defined
+     */
     String getStringValue() throws TemplateEvaluationException;
 
+    String getStringValueIfDefined() throws TemplateEvaluationException;
+
+    /**
+     * @throws TemplateEvaluationException if value not defined
+     */
+    CharSequence getCharSequence() throws TemplateEvaluationException;
+
+    CharSequence getCharSequenceIfDefined() throws TemplateEvaluationException;
+
+    /**
+     * @throws TemplateEvaluationException if value not defined
+     */
     void validate() throws TemplateEvaluationException;
-    // TODO:
+
+    /**
+     * @return <code>true</code> if not empty
+     * @throws TemplateEvaluationException if value not defined
+     */
+    boolean checkDefinedValueNotEmpty() throws TemplateEvaluationException;
+
+    ValueType checkValueType() throws TemplateEvaluationException;
+
+    /**
+     * @return <code>true</code> if defined
+     */
+    boolean isDefined() throws TemplateEvaluationException;
 }

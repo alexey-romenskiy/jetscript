@@ -19,37 +19,20 @@
 
 package codes.writeonce.fastfilter;
 
-import java.io.Serializable;
+class EmptyTemplateResultBuilder extends AbstractEmptyTemplateResultBuilder {
 
-public class TextPosition implements Serializable {
+    private static final EmptyTemplateResultBuilder INSTANCE = new EmptyTemplateResultBuilder();
 
-    private static final long serialVersionUID = -2248424770269380295L;
-
-    public final int row;
-    public final int column;
-
-    public static TextPosition newPosition(CharSequence text, int position) {
-        int row = 1;
-        int column = 1;
-        for (int i = 0; i < position; i++) {
-            if (text.charAt(i) == '\n') {
-                row++;
-                column = 1;
-            } else {
-                column++;
-            }
-        }
-
-        return new TextPosition(row, column);
+    public static EmptyTemplateResultBuilder newInstance() {
+        return INSTANCE;
     }
 
-    public TextPosition(int row, int column) {
-        this.row = row;
-        this.column = column;
+    private EmptyTemplateResultBuilder() {
+        // empty
     }
 
     @Override
-    public String toString() {
-        return "(" + row + ", " + column + ")";
+    public <V, E extends Throwable> V accept(Visitor<V, E> visitor) throws E {
+        return visitor.visit(this);
     }
 }

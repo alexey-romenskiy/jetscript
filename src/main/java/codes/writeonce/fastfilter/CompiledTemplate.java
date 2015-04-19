@@ -19,37 +19,33 @@
 
 package codes.writeonce.fastfilter;
 
-import java.io.Serializable;
+import java.io.IOException;
 
-public class TextPosition implements Serializable {
+public class CompiledTemplate {
 
-    private static final long serialVersionUID = -2248424770269380295L;
+    private final TemplateResult result;
 
-    public final int row;
-    public final int column;
-
-    public static TextPosition newPosition(CharSequence text, int position) {
-        int row = 1;
-        int column = 1;
-        for (int i = 0; i < position; i++) {
-            if (text.charAt(i) == '\n') {
-                row++;
-                column = 1;
-            } else {
-                column++;
-            }
-        }
-
-        return new TextPosition(row, column);
+    CompiledTemplate(TemplateResult result) {
+        this.result = result;
     }
 
-    public TextPosition(int row, int column) {
-        this.row = row;
-        this.column = column;
+    public boolean isConstant() {
+        return result.isConstant();
     }
 
-    @Override
-    public String toString() {
-        return "(" + row + ", " + column + ")";
+    public void evaluate(Appendable appendable) throws IOException, TemplateEvaluationException {
+        result.append(appendable);
+    }
+
+    public void evaluate(StringBuilder stringBuilder) throws TemplateEvaluationException {
+        result.append(stringBuilder);
+    }
+
+    public String evaluate() throws TemplateEvaluationException {
+        return result.getStringValue();
+    }
+
+    public void validate() throws TemplateEvaluationException {
+        result.validate();
     }
 }
